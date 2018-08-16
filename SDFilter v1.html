@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- Metas -->
+    <meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1, user-scalable=yes" />
+	<meta name="author" content="Th3 Exploiter" />
+	
+	<!-- Title  -->
+	<title>SD Filter By Th3 Exploiter</title>
+
+	<!-- Custom Style  -->
+	<style>
+		textarea{
+			background-color: #f2f2f2;
+		    border:1px solid #bdbdbd;
+		    border-left: 13px solid #bdbdbd;
+		}
+		.part {
+		    margin-top: 15px;
+		}
+		.thumbnail {
+		    display: block;
+		    margin-left: auto;
+		    margin-right: auto;
+		    max-width: 310px;
+		    margin-bottom: 30px;
+		    border-radius: 0;
+		    text-align: center;
+		    padding: 4px;
+		    line-height: 1.42857143;
+		    background-color: #fff;
+		    border: 1px solid #ddd;
+		    border-radius: 4px;
+		    -webkit-transition: border .2s ease-in-out;
+		    -o-transition: border .2s ease-in-out;
+		    transition: border .2s ease-in-out;
+		}
+		.is-hide{display:none;}
+	</style>
+
+	<!-- Bootstrap  -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container">
+		<div class="row justify-content-center" style="text-align:center;">
+			<div class="col-lg-12 part">
+				<textarea id="mails" cols="40" rows="11" placeholder="Enter emails here ..."></textarea>
+			</div>
+
+			<div class="col-lg-12 part">
+				<button class="btn btn-primary btn-lg btn-go">GO</button>
+				<span class="badge badge-secondary count">0 Emails</span>
+			</div>
+
+			<div class="col-lg-4 part">
+				<input type="text" class="form-control find" placeholder="Search ...">
+			</div>
+		</div>
+		<div class="row output"></div>
+	</div>
+	<script>
+		document.querySelector('.find').onkeyup = function() {
+            var val = this.value;
+            if (val) {
+                document.querySelectorAll('[data-id]').forEach((el) => {
+            		el.className = 'col-lg-4 col-md-6 col-sm-12 part is-hide';
+            	});
+                document.querySelectorAll('[data-id*="' + val + '"]').forEach((el) => {
+            		el.className = 'col-lg-4 col-md-6 col-sm-12 part';
+            	});
+            } else {
+            	document.querySelectorAll('[data-id]').forEach((el) => {
+            		el.className = 'col-lg-4 col-md-6 col-sm-12 part';
+            	});
+            }
+        };
+
+		function addItem(domain,mail) {
+			var c = `<div id="itm" class="col-lg-4 col-md-6 col-sm-12 part" data-id="${domain}">`;
+				c += `<div class="thumbnail">`;
+				c += `<h6>${domain} <span class="badge badge-success">1</span></h6>`;
+				c += `<textarea cols="35" rows="8">${mail}</textarea>`;
+				c += `</div>`;
+				c += `</div>`;
+				return c;
+		}
+
+		document.querySelector('.btn-go').onclick = function() {
+			var mailsArea = document.querySelector('#mails');
+			var mails = mailsArea.value.split('\n');
+			document.querySelector('.count').innerHTML = mails.length + (mails.length > 1 ? ' emails' : ' email');
+
+			if (mailsArea.value == '') {
+				mailsArea.style.border = '1px solid #dc3545';
+				mailsArea.style.borderLeft = '13px solid #dc3545';
+				return false;
+			} else {
+				mailsArea.style.border = '1px solid #bdbdbd';
+				mailsArea.style.borderLeft = '13px solid #bdbdbd';
+			}
+			
+			mails.forEach((mail) => {
+				if ( document.querySelectorAll('[data-id="'+ mail.split('@')[1] +'"]').length > 0 ) {
+					document.querySelector('[data-id="'+ mail.split('@')[1] +'"] textarea').innerHTML += '\n' + mail;
+					var cnt = document.querySelector('[data-id="'+ mail.split('@')[1] +'"] .badge').innerHTML;
+					document.querySelector('[data-id="'+ mail.split('@')[1] +'"] .badge').innerHTML = ++cnt;
+				} else {
+					document.querySelector('.output').innerHTML += addItem(mail.split('@')[1], mail);
+				}
+			});
+		};
+	</script>
+</body>
+</html>
